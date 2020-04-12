@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.staff.server.mapper.SalaryDetailMapper">
+  <resultMap id="BaseResultMap" type="com.staff.common.pojo.SalaryDetail">
+    <id column="SALARY_DETAIL_ID" jdbcType="BIGINT" property="salaryDetailId" />
+    <result column="SALARY_ID" jdbcType="BIGINT" property="salaryId" />
+    <result column="DETAIL_CONTENT" jdbcType="VARCHAR" property="detailContent" />
+    <result column="SALART_NUM" jdbcType="INTEGER" property="salartNum" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler" />
+    <result column="MODIFIED_TIME" jdbcType="TIMESTAMP" property="modifiedTime" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler" />
+    <result column="STATUS" jdbcType="CHAR" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    SALARY_DETAIL_ID, SALARY_ID, DETAIL_CONTENT, SALART_NUM, CREATE_TIME, MODIFIED_TIME, 
+    STATUS
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from salary_detail
+    where SALARY_DETAIL_ID = #{salaryDetailId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from salary_detail
+    where SALARY_DETAIL_ID = #{salaryDetailId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.staff.common.pojo.SalaryDetail">
+    insert into salary_detail (SALARY_DETAIL_ID, SALARY_ID, DETAIL_CONTENT, 
+      SALART_NUM, CREATE_TIME, 
+      MODIFIED_TIME, 
+      STATUS)
+    values (#{salaryDetailId,jdbcType=BIGINT}, #{salaryId,jdbcType=BIGINT}, #{detailContent,jdbcType=VARCHAR}, 
+      #{salartNum,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler}, 
+      #{modifiedTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler}, 
+      #{status,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.staff.common.pojo.SalaryDetail">
+    insert into salary_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="salaryDetailId != null">
+        SALARY_DETAIL_ID,
+      </if>
+      <if test="salaryId != null">
+        SALARY_ID,
+      </if>
+      <if test="detailContent != null">
+        DETAIL_CONTENT,
+      </if>
+      <if test="salartNum != null">
+        SALART_NUM,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="modifiedTime != null">
+        MODIFIED_TIME,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="salaryDetailId != null">
+        #{salaryDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="salaryId != null">
+        #{salaryId,jdbcType=BIGINT},
+      </if>
+      <if test="detailContent != null">
+        #{detailContent,jdbcType=VARCHAR},
+      </if>
+      <if test="salartNum != null">
+        #{salartNum,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      </if>
+      <if test="modifiedTime != null">
+        #{modifiedTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.staff.common.pojo.SalaryDetail">
+    update salary_detail
+    <set>
+      <if test="salaryId != null">
+        SALARY_ID = #{salaryId,jdbcType=BIGINT},
+      </if>
+      <if test="detailContent != null">
+        DETAIL_CONTENT = #{detailContent,jdbcType=VARCHAR},
+      </if>
+      <if test="salartNum != null">
+        SALART_NUM = #{salartNum,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      </if>
+      <if test="modifiedTime != null">
+        MODIFIED_TIME = #{modifiedTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=CHAR},
+      </if>
+    </set>
+    where SALARY_DETAIL_ID = #{salaryDetailId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.staff.common.pojo.SalaryDetail">
+    update salary_detail
+    set SALARY_ID = #{salaryId,jdbcType=BIGINT},
+      DETAIL_CONTENT = #{detailContent,jdbcType=VARCHAR},
+      SALART_NUM = #{salartNum,jdbcType=INTEGER},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      MODIFIED_TIME = #{modifiedTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      STATUS = #{status,jdbcType=CHAR}
+    where SALARY_DETAIL_ID = #{salaryDetailId,jdbcType=BIGINT}
+  </update>
+</mapper>

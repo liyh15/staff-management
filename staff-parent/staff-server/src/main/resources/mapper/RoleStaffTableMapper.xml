@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.staff.server.mapper.RoleStaffTableMapper">
+  <resultMap id="BaseResultMap" type="com.staff.common.pojo.RoleStaffTable">
+    <result column="STAFF_ID" jdbcType="BIGINT" property="staffId" />
+    <result column="ROLE_ID" jdbcType="BIGINT" property="roleId" />
+    <result column="STATUS" jdbcType="CHAR" property="status" />
+  </resultMap>
+  <insert id="insert" parameterType="com.staff.common.pojo.RoleStaffTable">
+    insert into role_staff_table (STAFF_ID, ROLE_ID, STATUS
+      )
+    values (#{staffId,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT}, #{status,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.staff.common.pojo.RoleStaffTable">
+    insert into role_staff_table
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="staffId != null">
+        STAFF_ID,
+      </if>
+      <if test="roleId != null">
+        ROLE_ID,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="staffId != null">
+        #{staffId,jdbcType=BIGINT},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

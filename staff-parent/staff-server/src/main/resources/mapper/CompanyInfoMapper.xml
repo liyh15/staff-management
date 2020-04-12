@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.staff.server.mapper.CompanyInfoMapper">
+  <resultMap id="BaseResultMap" type="com.staff.common.pojo.CompanyInfo">
+    <id column="INFO_ID" jdbcType="BIGINT" property="infoId" />
+    <result column="INFO_CONTENT" jdbcType="VARCHAR" property="infoContent" />
+    <result column="CREATER" jdbcType="BIGINT" property="creater" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler" />
+    <result column="MODIFIED_TIME" jdbcType="TIMESTAMP" property="modifiedTime" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler" />
+    <result column="STATUS" jdbcType="CHAR" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    INFO_ID, INFO_CONTENT, CREATER, CREATE_TIME, MODIFIED_TIME, STATUS
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from company_info
+    where INFO_ID = #{infoId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from company_info
+    where INFO_ID = #{infoId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.staff.common.pojo.CompanyInfo">
+    insert into company_info (INFO_ID, INFO_CONTENT, CREATER, 
+      CREATE_TIME, 
+      MODIFIED_TIME, 
+      STATUS)
+    values (#{infoId,jdbcType=BIGINT}, #{infoContent,jdbcType=VARCHAR}, #{creater,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler}, 
+      #{modifiedTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler}, 
+      #{status,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.staff.common.pojo.CompanyInfo">
+    insert into company_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="infoId != null">
+        INFO_ID,
+      </if>
+      <if test="infoContent != null">
+        INFO_CONTENT,
+      </if>
+      <if test="creater != null">
+        CREATER,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="modifiedTime != null">
+        MODIFIED_TIME,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="infoId != null">
+        #{infoId,jdbcType=BIGINT},
+      </if>
+      <if test="infoContent != null">
+        #{infoContent,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      </if>
+      <if test="modifiedTime != null">
+        #{modifiedTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.staff.common.pojo.CompanyInfo">
+    update company_info
+    <set>
+      <if test="infoContent != null">
+        INFO_CONTENT = #{infoContent,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null">
+        CREATER = #{creater,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      </if>
+      <if test="modifiedTime != null">
+        MODIFIED_TIME = #{modifiedTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=CHAR},
+      </if>
+    </set>
+    where INFO_ID = #{infoId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.staff.common.pojo.CompanyInfo">
+    update company_info
+    set INFO_CONTENT = #{infoContent,jdbcType=VARCHAR},
+      CREATER = #{creater,jdbcType=BIGINT},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      MODIFIED_TIME = #{modifiedTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      STATUS = #{status,jdbcType=CHAR}
+    where INFO_ID = #{infoId,jdbcType=BIGINT}
+  </update>
+</mapper>

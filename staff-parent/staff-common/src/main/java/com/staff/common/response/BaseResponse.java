@@ -1,6 +1,7 @@
 package com.staff.common.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.staff.common.config.ErrorCode;
 import lombok.Data;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,9 @@ import java.io.Serializable;
 @ToString
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class BaseResponse<T> implements Serializable {
+
+    public final static BaseResponse DEFAULT = new BaseResponse();
+
     /**
      * 返回码
      */
@@ -27,4 +31,9 @@ public class BaseResponse<T> implements Serializable {
      * 返回数据
      */
     private T data;
+
+    public void setException(ErrorCode.Status status) {
+       this.code = status.code;
+       this.message = status.message;
+    }
 }

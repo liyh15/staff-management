@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.staff.server.mapper.WorkTableMapper">
+  <resultMap id="BaseResultMap" type="com.staff.common.pojo.WorkTable">
+    <id column="WORK_ID" jdbcType="BIGINT" property="workId" />
+    <result column="WORK_NAME" jdbcType="VARCHAR" property="workName" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler" />
+    <result column="MODIFIED_TIME" jdbcType="TIMESTAMP" property="modifiedTime" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler" />
+    <result column="STATUS" jdbcType="CHAR" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    WORK_ID, WORK_NAME, CREATE_TIME, MODIFIED_TIME, STATUS
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from work_table
+    where WORK_ID = #{workId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from work_table
+    where WORK_ID = #{workId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.staff.common.pojo.WorkTable">
+    insert into work_table (WORK_ID, WORK_NAME, CREATE_TIME, 
+      MODIFIED_TIME, 
+      STATUS)
+    values (#{workId,jdbcType=BIGINT}, #{workName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler}, 
+      #{modifiedTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler}, 
+      #{status,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.staff.common.pojo.WorkTable">
+    insert into work_table
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="workId != null">
+        WORK_ID,
+      </if>
+      <if test="workName != null">
+        WORK_NAME,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="modifiedTime != null">
+        MODIFIED_TIME,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="workId != null">
+        #{workId,jdbcType=BIGINT},
+      </if>
+      <if test="workName != null">
+        #{workName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      </if>
+      <if test="modifiedTime != null">
+        #{modifiedTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.staff.common.pojo.WorkTable">
+    update work_table
+    <set>
+      <if test="workName != null">
+        WORK_NAME = #{workName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      </if>
+      <if test="modifiedTime != null">
+        MODIFIED_TIME = #{modifiedTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=CHAR},
+      </if>
+    </set>
+    where WORK_ID = #{workId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.staff.common.pojo.WorkTable">
+    update work_table
+    set WORK_NAME = #{workName,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      MODIFIED_TIME = #{modifiedTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      STATUS = #{status,jdbcType=CHAR}
+    where WORK_ID = #{workId,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.staff.server.mapper.StaffTableMapper">
+  <resultMap id="BaseResultMap" type="com.staff.common.pojo.StaffTable">
+    <id column="STAFF_ID" jdbcType="BIGINT" property="staffId" />
+    <result column="STAFF_NAME" jdbcType="VARCHAR" property="staffName" />
+    <result column="IDENTITY_ID" jdbcType="VARCHAR" property="identityId" />
+    <result column="STAFF_COUNT" jdbcType="VARCHAR" property="staffCount" />
+    <result column="STAFF_PASSWORD" jdbcType="VARCHAR" property="staffPassword" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler" />
+    <result column="MODIFIED_TIME" jdbcType="TIMESTAMP" property="modifiedTime" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler" />
+    <result column="STATUS" jdbcType="CHAR" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    STAFF_ID, STAFF_NAME, IDENTITY_ID, STAFF_COUNT, STAFF_PASSWORD, CREATE_TIME, MODIFIED_TIME, 
+    STATUS
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from staff_table
+    where STAFF_ID = #{staffId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from staff_table
+    where STAFF_ID = #{staffId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.staff.common.pojo.StaffTable">
+    insert into staff_table (STAFF_ID, STAFF_NAME, IDENTITY_ID, 
+      STAFF_COUNT, STAFF_PASSWORD, CREATE_TIME, 
+      MODIFIED_TIME, 
+      STATUS)
+    values (#{staffId,jdbcType=BIGINT}, #{staffName,jdbcType=VARCHAR}, #{identityId,jdbcType=VARCHAR}, 
+      #{staffCount,jdbcType=VARCHAR}, #{staffPassword,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler}, 
+      #{modifiedTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler}, 
+      #{status,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.staff.common.pojo.StaffTable">
+    insert into staff_table
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="staffId != null">
+        STAFF_ID,
+      </if>
+      <if test="staffName != null">
+        STAFF_NAME,
+      </if>
+      <if test="identityId != null">
+        IDENTITY_ID,
+      </if>
+      <if test="staffCount != null">
+        STAFF_COUNT,
+      </if>
+      <if test="staffPassword != null">
+        STAFF_PASSWORD,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="modifiedTime != null">
+        MODIFIED_TIME,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="staffId != null">
+        #{staffId,jdbcType=BIGINT},
+      </if>
+      <if test="staffName != null">
+        #{staffName,jdbcType=VARCHAR},
+      </if>
+      <if test="identityId != null">
+        #{identityId,jdbcType=VARCHAR},
+      </if>
+      <if test="staffCount != null">
+        #{staffCount,jdbcType=VARCHAR},
+      </if>
+      <if test="staffPassword != null">
+        #{staffPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      </if>
+      <if test="modifiedTime != null">
+        #{modifiedTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.staff.common.pojo.StaffTable">
+    update staff_table
+    <set>
+      <if test="staffName != null">
+        STAFF_NAME = #{staffName,jdbcType=VARCHAR},
+      </if>
+      <if test="identityId != null">
+        IDENTITY_ID = #{identityId,jdbcType=VARCHAR},
+      </if>
+      <if test="staffCount != null">
+        STAFF_COUNT = #{staffCount,jdbcType=VARCHAR},
+      </if>
+      <if test="staffPassword != null">
+        STAFF_PASSWORD = #{staffPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      </if>
+      <if test="modifiedTime != null">
+        MODIFIED_TIME = #{modifiedTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=CHAR},
+      </if>
+    </set>
+    where STAFF_ID = #{staffId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.staff.common.pojo.StaffTable">
+    update staff_table
+    set STAFF_NAME = #{staffName,jdbcType=VARCHAR},
+      IDENTITY_ID = #{identityId,jdbcType=VARCHAR},
+      STAFF_COUNT = #{staffCount,jdbcType=VARCHAR},
+      STAFF_PASSWORD = #{staffPassword,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      MODIFIED_TIME = #{modifiedTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      STATUS = #{status,jdbcType=CHAR}
+    where STAFF_ID = #{staffId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByCount" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from staff_table
+    where STAFF_COUNT = #{count, jdbcType=BIGINT}
+    and STATUS = '1'
+  </select>
+</mapper>
