@@ -14,9 +14,9 @@ eureka:
 zuul:
   routes:
     server:
-      path: /server/**
+      path: /**
       serviceId: server
-      sensitiveHeaders: *
+      sensitive-headers:
 
 #设置ribbon超时为一分钟
 ribbon:

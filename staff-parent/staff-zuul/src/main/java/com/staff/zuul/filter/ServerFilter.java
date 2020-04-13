@@ -5,9 +5,14 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import com.staff.common.config.ErrorCode;
+import com.staff.common.request.CheckLoginRequest;
 import com.staff.common.response.BaseResponse;
+import com.staff.common.response.CheckLoginResponse;
+import com.staff.zuul.feign.ServerControllerFeign;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +22,9 @@ import java.security.NoSuchAlgorithmException;
 
 @Configuration
 public class ServerFilter extends ZuulFilter {
+
+    @Autowired
+    private ServerControllerFeign serverControllerFeign;
 
     @Override
     public String filterType() {
@@ -44,17 +52,30 @@ public class ServerFilter extends ZuulFilter {
     public Object run() throws ZuulException {
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
-        HttpSession session = request.getSession();
-        String result = (String) session.getAttribute("isLogin");
-        if ("yes".equals(result)) {
+        CheckLoginRequest checkLoginRequest = new CheckLoginRequest();
+        String count = request.getHeader("count");
+        String sessionId = request.getHeader("sessionId");
+        if (StringUtils.isBlank(count) || StringUtils.isBlank(sessionId)) {
+            ctx.setSendZuulResponse(false);
+            BaseResponse baseResponse = new BaseResponse();
+            baseResponse.setException(ErrorCode.Status.NO_LOGIN);
+            ctx.getResponse().setContentType("application/json;charset=UTF-8");
+            ctx.setResponseBody(JSONObject.toJSONString(baseResponse));
+            ctx.setResponseStatusCode(HttpStatus.SC_OK);
+            return null;
+        }
+        checkLoginRequest.setCount(count);
+        checkLoginRequest.setSessionId(sessionId);
+        CheckLoginResponse response = serverControllerFeign.checkLogin(checkLoginRequest);
+        if ("1".equals(response.getIsLogin())) {
             ctx.setSendZuulResponse(true);
             ctx.setResponseStatusCode(HttpStatus.SC_OK);
         } else {
             ctx.setSendZuulResponse(false);
-            BaseResponse response = new BaseResponse();
-            response.setException(ErrorCode.Status.NO_LOGIN);
+            BaseResponse baseResponse = new BaseResponse();
+            baseResponse.setException(ErrorCode.Status.NO_LOGIN);
             ctx.getResponse().setContentType("application/json;charset=UTF-8");
-            ctx.setResponseBody(JSONObject.toJSONString(response));
+            ctx.setResponseBody(JSONObject.toJSONString(baseResponse));
             ctx.setResponseStatusCode(HttpStatus.SC_OK);
         }
         return null;

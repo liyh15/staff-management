@@ -8,7 +8,7 @@ public class ErrorCode {
 
         SUCESS("200", "成功"),
         CONFIRM_CODE_ERROR("401", "验证码错误"),
-        NO_LOGIN("402", "用户未登录"),
+        NO_LOGIN("402", "用户登录已过期，请重新登录"),
         USER_NOT_EXIST("403", "用户不存在"),
         ERROR("601", "系统异常"),
         COUNT_PASS_ERROR("404", "账号或密码错误"),
