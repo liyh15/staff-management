@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="78b31160-f148-4b36-b60e-161e38643781" name="Default Changelist" comment="" />
+    <list default="true" id="78b31160-f148-4b36-b60e-161e38643781" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/staff-server/src/main/java/com/staff/server/controller/pub/PublicViewController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/staff-server/src/main/resources/templates/Hello.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/staff-management.PDM" beforeDir="false" afterPath="$PROJECT_DIR$/staff-management.PDM" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/staff-management.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/staff-management.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/staff-server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/staff-server/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/staff-server/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/staff-server/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/staff-server/staff-server.iml" beforeDir="false" afterPath="$PROJECT_DIR$/staff-server/staff-server.iml" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +50,8 @@
       <option name="presentableId" value="Default" />
       <updated>1586660670879</updated>
       <workItem from="1586660673383" duration="6000" />
+      <workItem from="1586845499334" duration="4000" />
+      <workItem from="1586850244895" duration="1000" />
     </task>
     <servers />
   </component>
@@ -52,7 +63,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
