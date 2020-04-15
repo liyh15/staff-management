@@ -6,6 +6,8 @@
 </head>
 <script type="text/javascript"
         src="/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript"
+        src="/js/allParam.js"></script>
 <style type="text/css">
     *{
         margin: 0;
@@ -16,6 +18,7 @@
         background-repeat: no-repeat;
         background-position: center center;
         background-image: url("/image/login.jpg");
+        background-size:100% 100%;
         background-color: #ccc300;
         position: relative;
     }
@@ -95,7 +98,7 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);  /* 使用css3的transform来实现 */
-        font-size: 36px;
+        font-size: 45px;
         height: 40px;
         width: 30%;
     }
@@ -178,7 +181,7 @@
                    placeholder="输入用户名" id = "count" />
         </div>
         <div class="lgD">
-            <input type="text"
+            <input type="password"
                    placeholder="输入用户密码" id = "password"/>
         </div>
         <div class="lgD" id = "confirmDiv">
@@ -236,6 +239,10 @@
         object['count'] = $("#count").val();
         object['password'] = $("#password").val();
         object['confirmCode'] = $("#confirmCode").val();
+        if ($("#count").val() == "" || $("#password").val() == "" || $("#confirmCode").val() == "") {
+            alert("不能有空字段");
+            return;
+        }
 
         var json = JSON.stringify(object);
 
@@ -243,18 +250,32 @@
         var xhr = new XMLHttpRequest();
         // 注册监听函数
         xhr.onreadystatechange=function(){
-            if (xhr.status==200) {
-                alert(xhr.responseText)
+            // onreadystatechange,存储函数（或函数名），每当 readyState 属性改变时，就会调用该函数。
+            // onreadystatechange 事件被触发 4 次（0 - 4）, 分别是： 0-1、1-2、2-3、3-4，对应着 readyState 的每个变化。
+            if (xhr.readyState==4 && xhr.status==200) {
+                // 判断异常
+                var obj = JSON.parse(xhr.responseText);
+                if (obj["code"] != "200") {
+                    alert(obj["message"]);
+                    history.go(0);
+                } else {
+                    alert("登录成功");
+                    var count = xhr.getResponseHeader("count");
+                    var sessionId = xhr.getResponseHeader("sessionId");
+                    GlobalConfig.count=count;
+                    GlobalConfig.sessionId=sessionId;
+                }
             }
         }
         var url = "/public/system/login";
         // 第三个参数为true异步，false为同步
         xhr.open("POST",url,true);
-        xmlhttp.setRequestHeader("Content-type","application/json;charset=UTF-8");
-        xmlhttp.setRequestHeader("sessionId",sessionId);
+        xhr.setRequestHeader("Content-type","application/json;charset=UTF-8");
+        xhr.setRequestHeader("sessionId",sessionId);
         // send为null表示不传参数给接口
         xhr.send(json);
     }
+
 </script>
 </body>
 </html>
