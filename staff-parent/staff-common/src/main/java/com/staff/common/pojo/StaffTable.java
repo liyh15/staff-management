@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Data
 public class StaffTable implements Serializable {
     /**
-     * 编号
+     * 员工编号
      */
     private Long staffId;
 
@@ -46,8 +46,38 @@ public class StaffTable implements Serializable {
     private LocalDateTime modifiedTime;
 
     /**
-     * 0:无效
-            1:有效
+     * 数据状态
      */
     private String status;
+
+    /**
+     * 手机
+     */
+    private String phone;
+
+    /**
+     * 年龄
+     */
+    private Integer age;
+
+    /**
+     * 性别 0：男 1：女
+     */
+    private String sex;
+
+    /**
+     * 地址
+     */
+    private String address;
+
+    /**
+     * 邮箱
+     */
+    private String email;
+
+    /**
+     * 描述
+     */
+    private String describle;
+
 }

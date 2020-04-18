@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
+import com.staff.common.config.CookieUtil;
 import com.staff.common.config.ErrorCode;
 import com.staff.common.request.CheckLoginRequest;
 import com.staff.common.response.BaseResponse;
@@ -15,8 +16,10 @@ import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -53,15 +56,15 @@ public class ServerFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
         CheckLoginRequest checkLoginRequest = new CheckLoginRequest();
-        String count = request.getHeader("count");
-        String sessionId = request.getHeader("sessionId");
+        String count = CookieUtil.getCookieByName(request, "count");
+        String sessionId = CookieUtil.getCookieByName(request, "sessionId");
         if (StringUtils.isBlank(count) || StringUtils.isBlank(sessionId)) {
             ctx.setSendZuulResponse(false);
-            BaseResponse baseResponse = new BaseResponse();
-            baseResponse.setException(ErrorCode.Status.NO_LOGIN);
-            ctx.getResponse().setContentType("application/json;charset=UTF-8");
-            ctx.setResponseBody(JSONObject.toJSONString(baseResponse));
-            ctx.setResponseStatusCode(HttpStatus.SC_OK);
+            try {
+                ctx.getResponse().sendRedirect("/public/view/loginView");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return null;
         }
         checkLoginRequest.setCount(count);

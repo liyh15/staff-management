@@ -33,6 +33,11 @@ public class WorkTable implements Serializable {
      */
     private String status;
 
+    /**
+     * 备注
+     */
+    private String comment;
+
     private static final long serialVersionUID = 1L;
 
     public Long getWorkId() {
@@ -73,5 +78,13 @@ public class WorkTable implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

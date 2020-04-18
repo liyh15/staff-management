@@ -1,11 +1,10 @@
 package com.staff.server.controller.pub;
 
-import com.staff.common.config.BusinessException;
-import com.staff.common.config.CodeUtil;
-import com.staff.common.config.ErrorCode;
+import com.staff.common.config.*;
 import com.staff.common.pojo.StaffTable;
 import com.staff.common.request.LoginRequest;
 import com.staff.common.response.BaseResponse;
+import com.staff.common.response.GetWorkResponse;
 import com.staff.server.mapper.StaffTableMapper;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -51,7 +51,10 @@ public class PublicServerController {
          if (null == staffTable) {
             BusinessException.throwException(ErrorCode.Status.COUNT_PASS_ERROR);
          }
-         String sessionId = request.getHeader("sessionId");
+         String sessionId = CookieUtil.getCookieByName(request, "sessionId");
+         if (sessionId == null) {
+             BusinessException.throwException(ErrorCode.Status.NO_LOGIN);
+         }
          String confirmCode = redisTemplate.opsForValue().get(sessionId);
          // 取完之后删除
          redisTemplate.delete(sessionId);
@@ -61,13 +64,19 @@ public class PublicServerController {
          }
          // 验证密码
          String password = staffTable.getStaffPassword();
-         if (!password.equals(MD5(loginRequest.getPassword()))) {
+         if (!password.equals(MD5Utils.MD5(loginRequest.getPassword()))) {
              BusinessException.throwException(ErrorCode.Status.COUNT_PASS_ERROR);
          }
          // 登录成功,设置用户账号可以存在的缓存时间
          redisTemplate.opsForValue().set(loginRequest.getCount(), sessionId, 30, TimeUnit.MINUTES);
-         response.setHeader("count", loginRequest.getCount());
-         response.setHeader("sessionId", sessionId);
+         Cookie countCookie = new Cookie("count", loginRequest.getCount());
+         countCookie.setMaxAge(-1);
+         countCookie.setPath("/");
+         Cookie sessionCookie = new Cookie("sessionId", sessionId);
+         sessionCookie.setMaxAge(-1);
+         sessionCookie.setPath("/");
+         response.addCookie(countCookie);
+         response.addCookie(sessionCookie);
          return BaseResponse.DEFAULT;
     }
 
@@ -83,21 +92,10 @@ public class PublicServerController {
         String sessionId = session.getId() + address.getHostAddress() + ":" +port;
         // 将验证码存入缓存，并设置缓存可以保留的时间
         redisTemplate.opsForValue().set(sessionId, map.get("code").toString(),30, TimeUnit.SECONDS);
-        response.setHeader("sessionId", sessionId);
+        Cookie cookie = new Cookie("sessionId", sessionId);
+        response.addCookie(cookie);
+        cookie.setMaxAge(-1);
+        cookie.setPath("/");
         ImageIO.write((RenderedImage) map.get("codePic"), "jpeg", response.getOutputStream());
-    }
-
-
-    /**
-     * MD5加密算法
-     */
-    private String MD5(String password) {
-        // 给初始密码添加密钥，并进行初始加密
-        String md5Str = DigestUtils.md5Hex(password + "staffPassword!@#$%@!");
-        for (int i = 0; i < 10 ; i++) {
-            // 进行十次轮询加密
-            md5Str = DigestUtils.md5Hex(md5Str + "staffPassword!@#$%@!" + i);
-        }
-        return md5Str;
     }
 }

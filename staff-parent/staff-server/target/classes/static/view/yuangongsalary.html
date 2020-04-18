@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <title>登录</title>
+    <link rel="stylesheet" rev="stylesheet" href="../css/style.css" type="text/css" media="all" />
+    <script language="JavaScript" type="text/javascript">
+    </script>
+    <style type="text/css">
+    </style>
+    <script type="text/javascript"
+            src="/js/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript"
+            src="/js/allParam.js"></script>
+    <script type="text/javascript">
+        var staffName = "";
+        var staffCount = "";
+        $(function () {
+            // 初始话年月
+            var myDate = new Date();
+            //获取当前年
+            var year = myDate.getFullYear();
+            $("#year").append("<option selected=\"selected\">"+year+"</option>");
+            $("#year").append("<option>"+(year - 1)+"</option>");
+            var a=GetRequest();
+            staffCount = a["staffCount"];
+            staffName = a["staffName"];
+            $("#staffName").text(staffName + "工资");
+        });
+        // 发工资
+        function sendSalary() {
+            var obj={};
+            var form = $('#form').serializeArray();
+            for(var i =0;i<form .length;i++) {
+                if (form [i]['value'] == "") {
+                    alert(form [i].name + "字段不能为空");
+                    return;
+                }
+                obj[form [i].name]=form [i]['value'];
+            }
+            obj["staffCount"] = staffCount;
+            var xhr = new XMLHttpRequest();
+            xhr.open("post", "/private/system/paySalary", true);
+            xhr.setRequestHeader("Content-type","application/json;charset=UTF-8");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var res = JSON.parse(xhr.responseText);
+                    if (res["code"] != "200") {
+                        alert(res["message"]);
+                    } else {
+                        alert("员工工资录入成功")
+                        window.history.go(-1);
+                    }
+                }
+            }
+            xhr.send(JSON.stringify(obj));
+        }
+    </script>
+</head>
+
+<body class="ContentBody">
+  <form action="" method="post" enctype="multipart/form-data" name="form" target="sypost" id = "form">
+<div class="MainDiv">
+  <table width="99%" border="0" cellpadding="0" cellspacing="0" class="CContent">
+    <tr>
+      <th class="tablestyle_title" >员工工资发放</th>
+    </tr>
+    <tr>
+      <td class="CPanel"><table border="0" cellpadding="0" cellspacing="0" style="width:100%">
+          <tr>
+            <td align="left"><label style="font-size:16px" id = "staffName">&nbsp;&nbsp;张三工资</label></td>
+          </tr>
+          <tr>
+            <td width="100%"><fieldset style="height:100%;">
+              <legend>工资信息</legend>
+              <table border="0" cellpadding="2" cellspacing="1" style="width:100%">
+                <tr>
+                  <td nowrap align="right" width="15%">基本工资:</td>
+                  <td width="35%"><input name='baseSalary' type="text" class="text" style="width:154px" value="" /></td>
+                  <td align="right" width="16%">其他补助:</td>
+                  <td width="34%"><input name='otherSalary' type="text" class="text" style="width:154px" value="" />
+                      <span class="red">*</span></td>
+                </tr>
+                <tr>
+                  <td align="right">发放类型:</td>
+                  <td><select name="type" >
+                      <option>现金</option>
+                      <option>打卡</option>
+                  </select></td>
+                </tr>
+                <tr>
+                  <td align="right">年份:</td>
+                  <td><select name="year" id = "year">
+                  </select></td>
+                  <td align="right">月份:</td>
+                  <td><select name="month" id = "month">
+                      <option >1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                      <option>6</option>
+                      <option>7</option>
+                      <option>8</option>
+                      <option>9</option>
+                      <option>10</option>
+                      <option>11</option>
+                      <option>12</option>
+                  </select></td>
+                </tr>
+                <tr>
+                 <td align="right">描述:</td>
+					 <td colspan="3">&nbsp;</td>
+                </tr>
+              </table>
+              <br />
+            </fieldset></td>
+          </tr>
+      </table></td>
+    </tr>
+    <tr>
+      <td colspan="2" align="center" height="50px"><input type="button" name="Submit2" value="保存" class="button" onclick="sendSalary()"/>
+        　
+        <input type="button" name="Submit2" value="返回" class="button" onclick="window.history.go(-1);"/>
+        <textarea name="commont" cols="100" rows="8"></textarea></td>
+    </tr>
+  </table>
+  </td>
+  </tr>
+  </table>
+</div>
+</form>
+</body>
+</html>

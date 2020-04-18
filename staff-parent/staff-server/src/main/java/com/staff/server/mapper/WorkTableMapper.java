@@ -2,6 +2,8 @@ package com.staff.server.mapper;
 
 import com.staff.common.pojo.WorkTable;
 
+import java.util.List;
+
 public interface WorkTableMapper {
     int deleteByPrimaryKey(Long workId);
 
@@ -14,4 +16,7 @@ public interface WorkTableMapper {
     int updateByPrimaryKeySelective(WorkTable record);
 
     int updateByPrimaryKey(WorkTable record);
+
+    List<WorkTable> selectAll();
+
 }

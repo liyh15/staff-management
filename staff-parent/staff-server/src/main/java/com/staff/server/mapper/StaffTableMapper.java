@@ -1,7 +1,11 @@
 package com.staff.server.mapper;
 
+import com.staff.common.dto.GetStaffDTO;
 import com.staff.common.pojo.StaffTable;
+import com.staff.common.pojo.WorkTable;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface StaffTableMapper {
     int deleteByPrimaryKey(Long staffId);
@@ -16,9 +20,11 @@ public interface StaffTableMapper {
 
     int updateByPrimaryKey(StaffTable record);
 
-    /**
-     * 通过账号查找员工
-     * @return
-     */
     StaffTable selectByCount(@Param("count") String count);
+
+    List<GetStaffDTO> selectByName(@Param("name") String name, Integer pageNo);
+
+    Integer selectCountByName(@Param("name") String name);
+
+    GetStaffDTO selectByStaffCount(@Param("staffCount") String staffCount);
 }

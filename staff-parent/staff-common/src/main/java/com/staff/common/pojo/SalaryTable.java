@@ -1,11 +1,14 @@
 package com.staff.common.pojo;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * @author 
  */
+@Data
 public class SalaryTable implements Serializable {
     /**
      * 薪资编号
@@ -35,7 +38,7 @@ public class SalaryTable implements Serializable {
     /**
      * 员工编号
      */
-    private Long staffId;
+    private String staffCount;
 
     /**
      * 0:无效
@@ -43,61 +46,21 @@ public class SalaryTable implements Serializable {
      */
     private String status;
 
+    /**
+     * 工资数量
+     */
+    private Integer salaryNum;
+
+    /**
+     * 发放类型，0：现金 1：打卡
+     */
+    private String type;
+
+    /**
+     * 工资备注
+     */
+    private String commont;
+
     private static final long serialVersionUID = 1L;
 
-    public Long getSalaryId() {
-        return salaryId;
-    }
-
-    public void setSalaryId(Long salaryId) {
-        this.salaryId = salaryId;
-    }
-
-    public String getYear() {
-        return year;
-    }
-
-    public void setYear(String year) {
-        this.year = year;
-    }
-
-    public String getMonth() {
-        return month;
-    }
-
-    public void setMonth(String month) {
-        this.month = month;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getModifiedTime() {
-        return modifiedTime;
-    }
-
-    public void setModifiedTime(LocalDateTime modifiedTime) {
-        this.modifiedTime = modifiedTime;
-    }
-
-    public Long getStaffId() {
-        return staffId;
-    }
-
-    public void setStaffId(Long staffId) {
-        this.staffId = staffId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 }
