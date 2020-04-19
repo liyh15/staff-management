@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+	<title>登录</title>
+	<link rel="stylesheet" rev="stylesheet" href="../css/style.css" type="text/css" media="all" />
+	<script language="JavaScript" type="text/javascript">
+	</script>
+	<style type="text/css">
+	</style>
+	<script type="text/javascript"
+			src="/js/jquery-1.4.2.min.js"></script>
+	<script type="text/javascript"
+			src="/js/allParam.js"></script>
+	<script type="text/javascript">
+		$(function () {
+			var xhr = new XMLHttpRequest();
+			xhr.open("post", "/private/system/getMyAttendance", true);
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState==4 && xhr.status==200) {
+					// 判断异常
+					var obj = JSON.parse(xhr.responseText);
+					if (obj["code"] != "200") {
+						alert(obj["message"]);
+						if (obj["code"] == "402") {
+							window.location.href = "http://localhost:8083/public/view/loginView";
+						}
+					} else {
+						var data = obj["data"];
+						var attendanceTable = data["attendanceTable"];
+						if (attendanceTable.attendanceStatus != "未签到" || attendanceTable == null) {
+							alert("您当天已签到");
+							$("#mainView").remove();
+							$(".button").remove();
+						}
+					}
+				}
+			};
+			xhr.setRequestHeader("Content-type","application/json;charset=UTF-8");
+			xhr.send();
+		});
+		
+		function attandence() {
+			var req = {};
+			req['status'] = $("#status").val();
+			req['commont'] = $("#commont").val();
+			if ("请假" == req['status']) {
+				if (req['commont'] == ""){
+                    alert("请假内容不能为空");
+                    return;
+				}
+			}
+			var xhr = new XMLHttpRequest();
+			xhr.open("post", "/private/system/attandence", true);
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState==4 && xhr.status==200) {
+					// 判断异常
+					var obj = JSON.parse(xhr.responseText);
+					if (obj["code"] != "200") {
+						alert(obj["message"]);
+						if (obj["code"] == "402") {
+							window.location.href = "http://localhost:8083/public/view/loginView";
+						}
+					} else {
+						alert("考勤成功");
+						window.history.go(-1);
+					}
+				}
+			};
+			xhr.setRequestHeader("Content-type","application/json;charset=UTF-8");
+			xhr.send(JSON.stringify(req));
+		}
+	</script>
+</head>
+
+<body class="ContentBody">
+  <form action="" method="post" enctype="multipart/form-data" name="form" target="sypost" >
+<div class="MainDiv">
+<table width="99%" border="0" cellpadding="0" cellspacing="0" class="CContent">
+  <tr>
+      <th class="tablestyle_title" >员工考勤</th>
+  </tr>
+  <tr>
+    <td class="CPanel">
+		
+		<table border="0" cellpadding="0" cellspacing="0" style="width:100%">
+		<tr><td align="left">
+		<input type="button" name="Submit" value="保存" class="button" onclick="attandence()"/>　
+			
+			<input type="button" name="Submit2" value="返回" class="button" onclick="window.history.go(-1);"/>
+		</td></tr>
+		<TR>
+			<TD width="100%">
+				<fieldset style="height:100%;">
+				<legend>签到信息</legend>
+					  <table id = "mainView" border="0" cellpadding="2" cellspacing="1" style="width:100%">
+					    
+					    
+					  <tr>
+					    <td nowrap align="right" width="11%">选则考勤状态:</td>
+					    <td width="27%"><select id = "status"><option>已签到</option><option>请假</option></select>
+				        <span class="red">*</span></td>
+				        	
+					    <td align="right" width="25%">&nbsp;</td>
+					    <td width="37%">&nbsp;</td>
+					    </tr>
+					  <tr>
+					    <td  width="11%" nowrap align="right">备注:</td>
+					    <td colspan="3"><textarea id = "commont" name="textarea" cols="100" rows="20"></textarea></td>
+					    </tr>
+					  </table>
+			  <br />
+				</fieldset>			</TD>
+			
+		</TR>
+		
+		
+
+		
+		
+		
+		</TABLE>
+	
+	
+	 </td>
+  </tr>
+		</TABLE>
+	
+	
+	 </td>
+  </tr>
+  
+  
+  
+  </table>
+
+</div>
+</form>
+</body>
+</html>

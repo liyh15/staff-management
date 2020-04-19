@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+	<title>登录</title>
+<link rel="stylesheet" rev="stylesheet" href="../css/style.css" type="text/css" media="all" />
+<script language="JavaScript" type="text/javascript">
+</script>
+<style type="text/css">
+</style>
+	<script type="text/javascript"
+			src="/js/jquery-1.4.2.min.js"></script>
+	<script type="text/javascript"
+			src="/js/allParam.js"></script>
+	<script type="text/javascript">
+		$(function () {
+				var xhr = new XMLHttpRequest();
+				xhr.open("post", "/private/system/getMyStaffDetail", false);
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState==4 && xhr.status==200) {
+						// 判断异常
+						var obj = JSON.parse(xhr.responseText);
+						if (obj["code"] != "200") {
+							alert(obj["message"]);
+							if (obj["code"] == "402") {
+								window.location.href = "http://localhost:8083/public/view/loginView";
+							}
+						} else {
+							var data = obj["data"];
+							$("input").attr("readonly","readonly");
+							$("textarea").attr("readonly","readonly");
+							var getStaffDTO = data["getStaffDTO"];
+                            $("#staffCount").val(getStaffDTO["staffCount"]);
+							$("#staffName").val(getStaffDTO["staffName"]);
+							sex = getStaffDTO["sex"];
+							workName = getStaffDTO["workName"];
+							$("#sex").val(sex);
+							$("#workSelect").val(workName);
+							$("#phone").val(getStaffDTO["phone"]);
+							$("#identityId").val(getStaffDTO["identityId"]);
+							$("#email").val(getStaffDTO["email"]);
+							$("#describle").val(getStaffDTO["describle"]);
+							$("#staffCount").val(getStaffDTO["staffCount"]);
+							$("#age").val(getStaffDTO["age"]);
+							$("#address").val(getStaffDTO["address"]);
+						}
+					}
+				};
+				xhr.setRequestHeader("Content-type","application/json;charset=UTF-8");
+				xhr.send();
+			});
+	</script>
+</head>
+
+<body class="ContentBody">
+  <form id = "form" enctype="multipart/form-data" name="form" target="sypost" >
+<div class="MainDiv">
+<table width="99%" border="0" cellpadding="0" cellspacing="0" class="CContent">
+  <tr>
+      <th class="tablestyle_title" >员工基本信息</th>
+  </tr>
+  <tr>
+    <td class="CPanel">
+		
+		<table border="0" cellpadding="0" cellspacing="0" style="width:100%">
+				<TR>
+			<TD width="100%">
+				<fieldset style="height:100%;">
+				<legend>员工信息</legend>
+					  <table border="0" cellpadding="2" cellspacing="1" style="width:100%">
+					 
+					  <tr>
+					    <td nowrap align="right" width="15%">员工唯一编号:</td>
+					    <td width="35%"><input id = "staffCount" name='staffCount' type="text" class="text" style="width:154px" value="" />
+				        <span class="red">*</span></td>
+					  </tr>
+					    
+					    
+					  <tr>
+					    <td nowrap="nowrap" align="right">真实姓名:</td>
+					    <td><input id = "staffName" class="text" name='staffName' style="width:154px" value=""/><span class="red">*</span></td>
+					    <td align="right">性别:</td>
+					    <td><input name="sex" id = "sex"/>
+                            <span class="red">*</span></td>
+					  </tr>
+					  
+					  
+					  <tr>
+					    <td align="right">年龄:</td>
+					    <td><input id = "age" class="text" name='age' style="width:154px" value=""/><span class="red">*</span></td>
+					    <td align="right">身份证号码:</td>
+					    <td><input id = "identityId" class="text" name='identityId' style="width:154px" value=""/><span class="red">*</span></td>
+					  </tr>
+					  <tr>
+					    <td align="right">电子邮箱:</td>
+					    <td><input id = "email" class="text" name='email' style="width:154px" value=""/><span class="red">*</span></td>
+					    <td align="right">电话号码:</td>
+					    <td><input id = "phone" class="text" name='phone' style="width:154px" value=""/><span class="red">*</span></td>
+					  </tr>
+					  <tr>
+					    <td align="right">居住地址:</td>
+					    <td><input id = "address" name="address" type="text" size="30" /> <span class="red">*</span>                       </td>
+					    <td align="right">职位:</td>
+					    <td><input name="work" id = "workSelect"/><span class="red">*</span></td>
+					  </tr>
+					 
+					  <tr>
+					    <td align="right">描述:</td>
+					    <td colspan="3"><textarea id = "describle" name="describle" cols="100" rows="8"></textarea><span class="red">*</span></td>
+					    </tr>
+					  </table>
+			  <br />
+				</fieldset>			</TD>
+			
+		</TR>
+		
+
+		
+		
+		
+		</TABLE>
+	
+	
+	 </td>
+  </tr>
+		<TR>
+			<TD colspan="2" align="center" height="50px">
+			<input type="button" name="Submit2" value="返回" class="button" onclick="window.history.go(-1);"/></TD>
+		</TR>
+		</TABLE>
+	
+	
+	 </td>
+  </tr>
+  
+  
+  
+  </table>
+
+</div>
+</form>
+</body>
+</html>

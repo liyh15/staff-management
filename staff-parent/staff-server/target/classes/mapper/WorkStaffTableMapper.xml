@@ -45,4 +45,16 @@
     WHERE
       STAFF_COUNT = #{staffCount,jdbcType=VARCHAR}
   </update>
+  <select id="selectByCount" resultMap="BaseResultMap">
+    select
+      STAFF_COUNT,
+      WORK_ID,
+      STATUS
+    from
+      work_staff_table
+    WHERE
+      STAFF_COUNT = #{staffCount,jdbcType=VARCHAR}
+    AND
+      STATUS = '1'
+  </select>
 </mapper>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.staff.server.mapper.AttendanceTableMapper">
+  <resultMap id="BaseResultMap" type="com.staff.common.pojo.AttendanceTable">
+    <id column="ATTENDANCE_ID" jdbcType="BIGINT" property="attendanceId" />
+    <result column="STAFF_COUNT" jdbcType="VARCHAR" property="staffCount" />
+    <result column="ATTENDANCE_TIME" jdbcType="DATE" property="attendanceTime" typeHandler="org.apache.ibatis.type.LocalDateTypeHandler" />
+    <result column="ATTENDANCE_STATUS" jdbcType="VARCHAR" property="attendanceStatus" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler" />
+    <result column="MODIFIED_TIME" jdbcType="TIMESTAMP" property="modifiedTime" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler" />
+    <result column="STATUS" jdbcType="CHAR" property="status" />
+    <result column="STAFF_NAME" jdbcType="VARCHAR" property="staffName" />
+    <result column="COMMONT" jdbcType="VARCHAR" property="commont" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ATTENDANCE_ID, STAFF_COUNT, ATTENDANCE_TIME, ATTENDANCE_STATUS, CREATE_TIME, MODIFIED_TIME, 
+    STATUS, STAFF_NAME, COMMONT
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from attendance_table
+    where ATTENDANCE_ID = #{attendanceId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from attendance_table
+    where ATTENDANCE_ID = #{attendanceId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.staff.common.pojo.AttendanceTable">
+    insert into attendance_table (ATTENDANCE_ID, STAFF_COUNT, ATTENDANCE_TIME, 
+      ATTENDANCE_STATUS, CREATE_TIME, 
+      MODIFIED_TIME, 
+      STATUS, STAFF_NAME, COMMONT
+      )
+    values (#{attendanceId,jdbcType=BIGINT}, #{staffCount,jdbcType=VARCHAR}, #{attendanceTime,jdbcType=DATE,typeHandler=org.apache.ibatis.type.LocalDateTypeHandler}, 
+      #{attendanceStatus,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      #{modifiedTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler}, 
+      #{status,jdbcType=CHAR}, #{staffName,jdbcType=VARCHAR}, #{commont,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.staff.common.pojo.AttendanceTable">
+    insert into attendance_table
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="attendanceId != null">
+        ATTENDANCE_ID,
+      </if>
+      <if test="staffCount != null">
+        STAFF_COUNT,
+      </if>
+      <if test="attendanceTime != null">
+        ATTENDANCE_TIME,
+      </if>
+      <if test="attendanceStatus != null">
+        ATTENDANCE_STATUS,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="modifiedTime != null">
+        MODIFIED_TIME,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="staffName != null">
+        STAFF_NAME,
+      </if>
+      <if test="commont != null">
+        COMMONT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="attendanceId != null">
+        #{attendanceId,jdbcType=BIGINT},
+      </if>
+      <if test="staffCount != null">
+        #{staffCount,jdbcType=VARCHAR},
+      </if>
+      <if test="attendanceTime != null">
+        #{attendanceTime,jdbcType=DATE,typeHandler=org.apache.ibatis.type.LocalDateTypeHandler},
+      </if>
+      <if test="attendanceStatus != null">
+        #{attendanceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      </if>
+      <if test="modifiedTime != null">
+        #{modifiedTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="staffName != null">
+        #{staffName,jdbcType=VARCHAR},
+      </if>
+      <if test="commont != null">
+        #{commont,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.staff.common.pojo.AttendanceTable">
+    update attendance_table
+    <set>
+      <if test="staffCount != null">
+        STAFF_COUNT = #{staffCount,jdbcType=VARCHAR},
+      </if>
+      <if test="attendanceTime != null">
+        ATTENDANCE_TIME = #{attendanceTime,jdbcType=DATE,typeHandler=org.apache.ibatis.type.LocalDateTypeHandler},
+      </if>
+      <if test="attendanceStatus != null">
+        ATTENDANCE_STATUS = #{attendanceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      </if>
+      <if test="modifiedTime != null">
+        MODIFIED_TIME = #{modifiedTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=CHAR},
+      </if>
+      <if test="staffName != null">
+        STAFF_NAME = #{staffName,jdbcType=VARCHAR},
+      </if>
+      <if test="commont != null">
+        COMMONT = #{commont,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ATTENDANCE_ID = #{attendanceId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.staff.common.pojo.AttendanceTable">
+    update attendance_table
+    set STAFF_COUNT = #{staffCount,jdbcType=VARCHAR},
+      ATTENDANCE_TIME = #{attendanceTime,jdbcType=DATE,typeHandler=org.apache.ibatis.type.LocalDateTypeHandler},
+      ATTENDANCE_STATUS = #{attendanceStatus,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      MODIFIED_TIME = #{modifiedTime,jdbcType=TIMESTAMP,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      STATUS = #{status,jdbcType=CHAR},
+      STAFF_NAME = #{staffName,jdbcType=VARCHAR},
+      COMMONT = #{commont,jdbcType=VARCHAR}
+    where ATTENDANCE_ID = #{attendanceId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByParams" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from attendance_table
+    <where>
+      <if test="date != null">
+        ATTENDANCE_TIME = #{date, jdbcType=DATE,typeHandler=org.apache.ibatis.type.LocalDateTypeHandler}
+      </if>
+      <if test="status != null and status != ''">
+        AND ATTENDANCE_STATUS = #{status, jdbcType=VARCHAR}
+      </if>
+      <if test="staffCount != null and staffCount != ''">
+        AND STAFF_COUNT = #{staffCount, jdbcType=VARCHAR}
+      </if>
+        AND STATUS = '1'
+    </where>
+    limit #{pageNo, jdbcType=INTEGER},10
+  </select>
+  <select id="selectCount" resultType="java.lang.Integer">
+    select
+    COUNT(1)
+    from attendance_table
+    <where>
+      <if test="date != null">
+        ATTENDANCE_TIME = #{date, jdbcType=DATE,typeHandler=org.apache.ibatis.type.LocalDateTypeHandler}
+      </if>
+      <if test="status != null and status != ''">
+        AND ATTENDANCE_STATUS = #{status, jdbcType=VARCHAR}
+      </if>
+      <if test="staffCount != null and staffCount != ''">
+        AND STAFF_COUNT = #{staffCount, jdbcType=VARCHAR}
+      </if>
+      AND STATUS = '1'
+    </where>
+  </select>
+</mapper>
