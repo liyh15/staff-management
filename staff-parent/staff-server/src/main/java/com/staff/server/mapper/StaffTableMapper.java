@@ -24,6 +24,8 @@ public interface StaffTableMapper {
 
     List<GetStaffDTO> selectByName(@Param("name") String name, Integer pageNo);
 
+    List<StaffTable> selectAll();
+
     Integer selectCountByName(@Param("name") String name);
 
     GetStaffDTO selectByStaffCount(@Param("staffCount") String staffCount);

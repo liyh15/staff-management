@@ -23,6 +23,9 @@
 					var obj = JSON.parse(xhr.responseText);
 					if (obj["code"] != "200") {
 						alert(obj["message"]);
+						if (obj["code"] == "402") {
+							window.location.href = "http://localhost:8083/public/view/loginView";
+						}
 					} else {
 						var data = obj["data"];
 						var workList = data["workTableList"];
@@ -53,6 +56,9 @@
 					var res = JSON.parse(xhr.responseText);
 					if (res["code"] != "200") {
 						alert(res["message"]);
+						if (obj["code"] == "402") {
+							window.location.href = "http://localhost:8083/public/view/loginView";
+						}
 					} else {
 						alert("注册成功")
 						window.history.go(-1);

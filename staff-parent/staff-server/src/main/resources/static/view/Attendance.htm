@@ -13,15 +13,9 @@
 	<script type="text/javascript"
 			src="/js/allParam.js"></script>
 	<script type="text/javascript">
-		function createWork() {
-			var req = {};
-			req['workName'] = $("#workName").val();
-			req['commont'] = $("#commont").val();
-			if (req['workName'] == "" || req['commont'] == "") {
-				alert("岗位信息不能为空");
-			}
+		$(function () {
 			var xhr = new XMLHttpRequest();
-			xhr.open("post", "/private/system/createWork", true);
+			xhr.open("post", "/private/system/getMyAttendance", true);
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState==4 && xhr.status==200) {
 					// 判断异常
@@ -32,7 +26,43 @@
 							window.location.href = "http://localhost:8083/public/view/loginView";
 						}
 					} else {
-						alert("创建岗位成功");
+						var data = obj["data"];
+						var attendanceTable = data["attendanceTable"];
+						if (attendanceTable.attendanceStatus != "未签到" || attendanceTable == null) {
+							alert("您当天已签到");
+							$("#mainView").remove();
+							$(".button").remove();
+						}
+					}
+				}
+			};
+			xhr.setRequestHeader("Content-type","application/json;charset=UTF-8");
+			xhr.send();
+		});
+		
+		function attandence() {
+			var req = {};
+			req['status'] = $("#status").val();
+			req['commont'] = $("#commont").val();
+			if ("请假" == req['status']) {
+				if (req['commont'] == ""){
+                    alert("请假内容不能为空");
+                    return;
+				}
+			}
+			var xhr = new XMLHttpRequest();
+			xhr.open("post", "/private/system/attandence", true);
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState==4 && xhr.status==200) {
+					// 判断异常
+					var obj = JSON.parse(xhr.responseText);
+					if (obj["code"] != "200") {
+						alert(obj["message"]);
+						if (obj["code"] == "402") {
+							window.location.href = "http://localhost:8083/public/view/loginView";
+						}
+					} else {
+						alert("考勤成功");
 						window.history.go(-1);
 					}
 				}
@@ -48,27 +78,27 @@
 <div class="MainDiv">
 <table width="99%" border="0" cellpadding="0" cellspacing="0" class="CContent">
   <tr>
-      <th class="tablestyle_title" >岗位基本信息录入</th>
+      <th class="tablestyle_title" >员工考勤</th>
   </tr>
   <tr>
     <td class="CPanel">
 		
 		<table border="0" cellpadding="0" cellspacing="0" style="width:100%">
 		<tr><td align="left">
-		<input type="button" name="Submit" value="保存" class="button" onclick="createWork()"/>　
+		<input type="button" name="Submit" value="保存" class="button" onclick="attandence()"/>　
 			
 			<input type="button" name="Submit2" value="返回" class="button" onclick="window.history.go(-1);"/>
 		</td></tr>
 		<TR>
 			<TD width="100%">
 				<fieldset style="height:100%;">
-				<legend>职位信息</legend>
-					  <table border="0" cellpadding="2" cellspacing="1" style="width:100%">
+				<legend>签到信息</legend>
+					  <table id = "mainView" border="0" cellpadding="2" cellspacing="1" style="width:100%">
 					    
 					    
 					  <tr>
-					    <td nowrap align="right" width="11%">职位名:</td>
-					    <td width="27%"><input id = "workName" name='txt3' class="text" style="width:154px" value="" />
+					    <td nowrap align="right" width="11%">选则考勤状态:</td>
+					    <td width="27%"><select id = "status"><option>已签到</option><option>请假</option></select>
 				        <span class="red">*</span></td>
 				        	
 					    <td align="right" width="25%">&nbsp;</td>

@@ -20,38 +20,11 @@ public class PublicViewController {
     }
 
     /**
-     * 登录界面
-     * @return
-     */
-    @RequestMapping("/left")
-    public String left() {
-        return "left";
-    }
-
-    /**
      * 用户对应的主页
      * @return
      */
     @RequestMapping("/mainView")
     public String mainView() {
         return "index";
-    }
-
-    /**
-     * 用户对应的主页
-     * @return
-     */
-    @RequestMapping("/mainfra")
-    public String mainfra() {
-        return "mainfra";
-    }
-
-    /**
-     * 用户对应的主页
-     * @return
-     */
-    @RequestMapping("/top")
-    public String top() {
-        return "top";
     }
 }

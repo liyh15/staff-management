@@ -34,6 +34,9 @@
 					var obj = JSON.parse(xhr.responseText);
 					if (obj["code"] != "200") {
 						alert(obj["message"]);
+						if (obj["code"] == "402") {
+							window.location.href = "http://localhost:8083/public/view/loginView";
+						}
 					} else {
 						alert("修改岗位成功");
 						window.history.go(-1);

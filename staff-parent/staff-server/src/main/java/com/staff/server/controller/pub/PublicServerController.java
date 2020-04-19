@@ -51,28 +51,38 @@ public class PublicServerController {
          if (null == staffTable) {
             BusinessException.throwException(ErrorCode.Status.COUNT_PASS_ERROR);
          }
-         String sessionId = CookieUtil.getCookieByName(request, "sessionId");
+         String sessionId = CookieUtil.getCookieByName(request, "comfirmSession");
          if (sessionId == null) {
              BusinessException.throwException(ErrorCode.Status.NO_LOGIN);
          }
          String confirmCode = redisTemplate.opsForValue().get(sessionId);
-         // 取完之后删除
-         redisTemplate.delete(sessionId);
          // 验证验证码
          if (!loginRequest.getConfirmCode().toUpperCase().equals(confirmCode)) {
+             Cookie sCookie = new Cookie("comfirmSession", null);
+             sCookie.setMaxAge(0);
+             sCookie.setPath("/");
+             response.addCookie(sCookie);
              BusinessException.throwException(ErrorCode.Status.CONFIRM_CODE_ERROR);
          }
          // 验证密码
          String password = staffTable.getStaffPassword();
          if (!password.equals(MD5Utils.MD5(loginRequest.getPassword()))) {
+             Cookie sCookie = new Cookie("comfirmSession", null);
+             sCookie.setMaxAge(0);
+             sCookie.setPath("/");
+             response.addCookie(sCookie);
              BusinessException.throwException(ErrorCode.Status.COUNT_PASS_ERROR);
          }
          // 登录成功,设置用户账号可以存在的缓存时间
          redisTemplate.opsForValue().set(loginRequest.getCount(), sessionId, 30, TimeUnit.MINUTES);
+         Cookie sCookie = new Cookie("comfirmSession", null);
+         sCookie.setMaxAge(0);
+         sCookie.setPath("/");
+         response.addCookie(sCookie);
          Cookie countCookie = new Cookie("count", loginRequest.getCount());
          countCookie.setMaxAge(-1);
          countCookie.setPath("/");
-         Cookie sessionCookie = new Cookie("sessionId", sessionId);
+         Cookie sessionCookie = new Cookie("lyhsessionId", sessionId);
          sessionCookie.setMaxAge(-1);
          sessionCookie.setPath("/");
          response.addCookie(countCookie);
@@ -91,11 +101,19 @@ public class PublicServerController {
         InetAddress address = InetAddress.getLocalHost();
         String sessionId = session.getId() + address.getHostAddress() + ":" +port;
         // 将验证码存入缓存，并设置缓存可以保留的时间
-        redisTemplate.opsForValue().set(sessionId, map.get("code").toString(),30, TimeUnit.SECONDS);
-        Cookie cookie = new Cookie("sessionId", sessionId);
+        redisTemplate.opsForValue().set(sessionId, map.get("code").toString(),10, TimeUnit.MINUTES);
+        Cookie cookie = new Cookie("comfirmSession", sessionId);
         response.addCookie(cookie);
         cookie.setMaxAge(-1);
         cookie.setPath("/");
+        Cookie countCookie = new Cookie("count", null);
+        countCookie.setMaxAge(0);
+        countCookie.setPath("/");
+        Cookie sessionCookie = new Cookie("lyhsessionId", null);
+        sessionCookie.setMaxAge(0);
+        sessionCookie.setPath("/");
+        response.addCookie(countCookie);
+        response.addCookie(sessionCookie);
         ImageIO.write((RenderedImage) map.get("codePic"), "jpeg", response.getOutputStream());
     }
 }

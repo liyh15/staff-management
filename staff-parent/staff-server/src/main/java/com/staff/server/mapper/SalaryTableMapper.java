@@ -21,4 +21,19 @@ public interface SalaryTableMapper {
     List<SalaryTable> selectSalaryByParam(@Param("staffCount") String staffCount,
                                           @Param("year") String year,
                                           @Param("month") String month);
+
+    /**
+     * 查询数量
+     * @param staffCount
+     * @param year
+     * @param month
+     * @return
+     */
+    int selectSalryCount(@Param("staffCount") String staffCount,
+                         @Param("year") String year,
+                         @Param("month") String month);
+
+    List<SalaryTable> selectSalaryByPageNo(@Param("staffCount") String staffCount,
+                                          @Param("year") String year,
+                                          @Param("month") String month,@Param("pageNo") Integer pageNo);
 }

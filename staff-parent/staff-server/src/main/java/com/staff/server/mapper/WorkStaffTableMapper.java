@@ -8,4 +8,6 @@ public interface WorkStaffTableMapper {
     int insertSelective(WorkStaffTable record);
 
     int deleteWorkStaff(@Param("staffCount") String staffCount);
+
+    WorkStaffTable selectByCount(@Param("staffCount") String staffCount);
 }

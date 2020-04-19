@@ -227,7 +227,7 @@
     <if test="name != null and name != ''">
     and STAFF_NAME like concat('%',#{name, jdbcType=VARCHAR},'%')
     </if>
-    limit #{pageNo, jdbcType=VARCHAR},10
+    limit #{pageNo, jdbcType=INTEGER},10
   </select>
   <select id="selectCountByName" resultType="java.lang.Integer">
     select
@@ -260,5 +260,11 @@
     <if test="staffCount != null and staffCount != ''">
       and st.STAFF_COUNT = #{staffCount, jdbcType=VARCHAR}
     </if>
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from staff_table
+    where STATUS = '1'
   </select>
 </mapper>

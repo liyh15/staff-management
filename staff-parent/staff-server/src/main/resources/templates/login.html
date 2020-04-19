@@ -17,7 +17,7 @@
         height: 460px;
         background-repeat: no-repeat;
         background-position: center center;
-        background-image: url("/image/login.jpg");
+        background-image: url("/publicImage/login.jpg");
         background-size:100% 100%;
         background-color: #ccc300;
         position: relative;
@@ -260,10 +260,7 @@
                     history.go(0);
                 } else {
                     alert("登录成功");
-                    var count = xhr.getResponseHeader("count");
-                    var sessionId = xhr.getResponseHeader("sessionId");
-                    GlobalConfig.count=count;
-                    GlobalConfig.sessionId=sessionId;
+                    window.location.href = "http://localhost:8083/private/view/mainView";
                 }
             }
         }

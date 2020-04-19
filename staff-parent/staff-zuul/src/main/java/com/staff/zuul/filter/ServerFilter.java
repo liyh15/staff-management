@@ -45,10 +45,10 @@ public class ServerFilter extends ZuulFilter {
         HttpServletRequest request = ctx.getRequest();
         String url = request.getRequestURL().toString();
         // 拦截需要走网关的，private表示需要拦截的
-        if (url.contains("/private/")) {
-            return true;
+        if (url.contains("public") || url.contains("js")) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ServerFilter extends ZuulFilter {
         HttpServletRequest request = ctx.getRequest();
         CheckLoginRequest checkLoginRequest = new CheckLoginRequest();
         String count = CookieUtil.getCookieByName(request, "count");
-        String sessionId = CookieUtil.getCookieByName(request, "sessionId");
+        String sessionId = CookieUtil.getCookieByName(request, "lyhsessionId");
         if (StringUtils.isBlank(count) || StringUtils.isBlank(sessionId)) {
             ctx.setSendZuulResponse(false);
             try {

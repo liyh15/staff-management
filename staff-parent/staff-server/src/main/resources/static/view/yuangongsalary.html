@@ -47,6 +47,9 @@
                     var res = JSON.parse(xhr.responseText);
                     if (res["code"] != "200") {
                         alert(res["message"]);
+                        if (obj["code"] == "402") {
+                            window.location.href = "http://localhost:8083/public/view/loginView";
+                        }
                     } else {
                         alert("员工工资录入成功")
                         window.history.go(-1);

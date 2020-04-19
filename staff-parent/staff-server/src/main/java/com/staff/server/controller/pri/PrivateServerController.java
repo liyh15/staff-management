@@ -1,32 +1,31 @@
 package com.staff.server.controller.pri;
 
 import com.staff.common.config.BusinessException;
+import com.staff.common.config.CookieUtil;
 import com.staff.common.config.ErrorCode;
 import com.staff.common.config.MD5Utils;
 import com.staff.common.dto.GetStaffDTO;
-import com.staff.common.pojo.SalaryTable;
-import com.staff.common.pojo.StaffTable;
-import com.staff.common.pojo.WorkStaffTable;
-import com.staff.common.pojo.WorkTable;
+import com.staff.common.pojo.*;
 import com.staff.common.request.*;
 import com.staff.common.response.*;
-import com.staff.server.mapper.SalaryTableMapper;
-import com.staff.server.mapper.StaffTableMapper;
-import com.staff.server.mapper.WorkStaffTableMapper;
-import com.staff.server.mapper.WorkTableMapper;
+import com.staff.server.mapper.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -49,6 +48,9 @@ public class PrivateServerController {
 
     @Autowired(required = true)
     private SalaryTableMapper salaryTableMapper;
+
+    @Autowired
+    private AttendanceTableMapper attendanceTableMapper;
 
 
     @RequestMapping(value = "/hello", consumes = {"application/json"}, produces = {"application/json"},
@@ -125,6 +127,81 @@ public class PrivateServerController {
     }
 
     /**
+     * 获取所有的考勤记录
+     * @return
+     */
+    @RequestMapping(value = "/getAttendance", consumes = {"application/json"},
+            produces = {"application/json"}, method = RequestMethod.POST)
+    public GetAttendanceResponse getAttendance(@RequestBody GetAttendanceRequest request) {
+        GetAttendanceResponse response = new GetAttendanceResponse();
+        Integer count = attendanceTableMapper.selectCount(request.getDate(), request.getStatus(), request.getStaffCount());
+        if (count == 0) {
+            response.setPageTotal(1);
+            return response;
+        } else {
+            response.setPageTotal((int)Math.ceil(Double.valueOf(count) / 10));
+        }
+        List<AttendanceTable> attendanceTableList = attendanceTableMapper.
+                selectByParams(request.getDate(), request.getStatus(), request.getStaffCount(),
+                (request.getPageNo() -1) * 10);
+        response.setAttendanceTableList(attendanceTableList);
+        return response;
+    }
+
+    /**
+     * 员工考勤
+     * @return
+     */
+    @RequestMapping(value = "/attandence", consumes = {"application/json"},
+            produces = {"application/json"}, method = RequestMethod.POST)
+    public BaseResponse attandence(@RequestBody AttendanceRequest attendanceRequest, HttpServletRequest request) {
+        String staffCount = CookieUtil.getCookieByName(request, "count");
+        List<AttendanceTable> attendanceTableList = attendanceTableMapper.
+                selectByParams(LocalDate.now(), null, staffCount, 0);
+        AttendanceTable attendanceTable = attendanceTableList.get(0);
+        attendanceTable.setAttendanceStatus(attendanceRequest.getStatus());
+        attendanceTable.setCommont(attendanceRequest.getCommont());
+        attendanceTableMapper.updateByPrimaryKeySelective(attendanceTable);
+        return BaseResponse.DEFAULT;
+    }
+
+    /**
+     * 查询员工当日是否已经考勤
+     * @return
+     */
+    @RequestMapping(value = "/getMyAttendance", consumes = {"application/json"},
+            produces = {"application/json"}, method = RequestMethod.POST)
+    public GetMyAttendanceResponse getMyAttendance(HttpServletRequest request) {
+        String staffCount = CookieUtil.getCookieByName(request, "count");
+        GetMyAttendanceResponse response = new GetMyAttendanceResponse();
+        List<AttendanceTable> attendanceTableList = attendanceTableMapper.
+                selectByParams(LocalDate.now(), null, staffCount, 0);
+        response.setAttendanceTable(attendanceTableList.get(0));
+        return response;
+    }
+
+    /**
+     * 获取员工工资
+     * @return
+     */
+    @RequestMapping(value = "/getSalaryList", consumes = {"application/json"},
+            produces = {"application/json"}, method = RequestMethod.POST)
+    public GetSalaryListResponse getSalaryList(@RequestBody GetSalaryListRequest request) {
+        Integer count = salaryTableMapper.selectSalryCount(request.getStaffCount(),request.getYear(),request.getMonth());
+        GetSalaryListResponse response = new GetSalaryListResponse();
+        if (count == 0) {
+            response.setPageTotal(1);
+            return response;
+        } else {
+            response.setPageTotal((int)Math.ceil(Double.valueOf(count) / 10));
+        }
+        List<SalaryTable> salaryTableList = salaryTableMapper.selectSalaryByPageNo(request.getStaffCount(),request.getYear(),request.getMonth(),
+                (request.getPageNo() -1) * 10);
+        response.setSalaryTableList(salaryTableList);
+        return response;
+    }
+
+    /**
      * 录入工资
      * @return
      */
@@ -163,6 +240,23 @@ public class PrivateServerController {
             produces = {"application/json"}, method = RequestMethod.POST)
     public GetStaffDetailResponse getStaffDetailResponse(@RequestBody GetStaffDetailRequest request) {
         GetStaffDTO staffDTO = staffTableMapper.selectByStaffCount(request.getStaffCount());
+        if (staffDTO == null) {
+            BusinessException.throwException(ErrorCode.Status.USER_NOT_EXIST);
+        }
+        GetStaffDetailResponse response = new GetStaffDetailResponse();
+        response.setGetStaffDTO(staffDTO);
+        return response;
+    }
+
+    /**
+     * 获取个人用户详情
+     * @return
+     */
+    @RequestMapping(value = "/getMyStaffDetail", consumes = {"application/json"},
+            produces = {"application/json"}, method = RequestMethod.POST)
+    public GetStaffDetailResponse getMyStaffDetail(HttpServletRequest request) {
+        String staffCount = CookieUtil.getCookieByName(request, "count");
+        GetStaffDTO staffDTO = staffTableMapper.selectByStaffCount(staffCount);
         if (staffDTO == null) {
             BusinessException.throwException(ErrorCode.Status.USER_NOT_EXIST);
         }
@@ -258,4 +352,28 @@ public class PrivateServerController {
         return BaseResponse.DEFAULT;
     }
 
+    /**
+     * 定时生成员工考勤记录
+     */
+    @Scheduled(cron = "*/10 * * * * ?")
+    public void attandenceTaskJob() {
+        Integer count = attendanceTableMapper.selectCount(LocalDate.now(),null,null);
+        if (count == 0) {
+            List<StaffTable> staffTableList = staffTableMapper.selectAll();
+            if (null != staffTableList && !staffTableList.isEmpty()) {
+               for (StaffTable staffTable : staffTableList) {
+                   AttendanceTable attendanceTable = new AttendanceTable();
+                   attendanceTable.setStaffCount(staffTable.getStaffCount());
+                   attendanceTable.setAttendanceTime(LocalDate.now());
+                   attendanceTable.setCommont("无");
+                   attendanceTable.setAttendanceStatus("未签到");
+                   attendanceTable.setStatus("1");
+                   attendanceTable.setStaffName(staffTable.getStaffName());
+                   attendanceTable.setCreateTime(LocalDateTime.now());
+                   attendanceTable.setModifiedTime(LocalDateTime.now());
+                   attendanceTableMapper.insertSelective(attendanceTable);
+               }
+            }
+        }
+    }
 }

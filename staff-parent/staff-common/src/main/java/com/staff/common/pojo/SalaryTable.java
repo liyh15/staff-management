@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
  */
 @Data
 public class SalaryTable implements Serializable {
+
+    private String staffName;
+
     /**
      * 薪资编号
      */

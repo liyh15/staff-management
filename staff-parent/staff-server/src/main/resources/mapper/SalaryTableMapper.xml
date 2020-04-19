@@ -169,4 +169,49 @@
       AND STATUS = '1'
     </where>
   </select>
+  <select id="selectSalryCount" resultType="java.lang.Integer">
+    select
+    count(1)
+    from salary_table
+    <where>
+      <if test="year != null and year != ''">
+        YEAR = #{year,jdbcType=VARCHAR}
+      </if>
+      <if test="month != null and month != ''">
+        AND MONTH = #{month,jdbcType=VARCHAR}
+      </if>
+      <if test="staffCount != null and staffCount != ''">
+        AND STAFF_COUNT = #{staffCount,jdbcType=VARCHAR}
+      </if>
+      AND STATUS = '1'
+    </where>
+  </select>
+  <select id="selectSalaryByPageNo" resultType="com.staff.common.pojo.SalaryTable">
+    select
+      SALARY_ID salaryId,
+      YEAR year,
+      MONTH month,
+      stt.STAFF_COUNT staffCount,
+      stt.STAFF_NAME staffName,
+      SALARY_NUM salaryNum,
+      TYPE type,
+      sat.COMMONT commont
+    from salary_table sat
+    inner join staff_table stt
+    on sat.STAFF_COUNT = stt.STAFF_COUNT
+    <where>
+      <if test="year != null and year != ''">
+        YEAR = #{year,jdbcType=VARCHAR}
+      </if>
+      <if test="month != null and month != ''">
+        AND MONTH = #{month,jdbcType=VARCHAR}
+      </if>
+      <if test="staffCount != null and staffCount != ''">
+        AND sat.STAFF_COUNT = #{staffCount,jdbcType=VARCHAR}
+      </if>
+      AND sat.STATUS = '1'
+      AND stt.STATUS = '1'
+    </where>
+    limit #{pageNo, jdbcType=INTEGER},10
+  </select>
 </mapper>
