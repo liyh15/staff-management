@@ -347,6 +347,8 @@ public class PrivateServerController {
         WorkTable workTable = new WorkTable();
         workTable.setWorkName(request.getWorkName());
         workTable.setComment(request.getCommont());
+        workTable.setCreateTime(LocalDateTime.now());
+        workTable.setModifiedTime(LocalDateTime.now());
         workTable.setStatus("1");
         workTableMapper.insertSelective(workTable);
         return BaseResponse.DEFAULT;
