@@ -9,9 +9,9 @@ spring:
     name: server
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    jdbcUrl: jdbc:mysql://192.168.1.102:3306/staff?useUnicode=true&characterEncoding=UTF-8&socketTimeout=60000
-    userName: root
-    password: 1234
+    jdbcUrl: jdbc:mysql://10.21.19.72:3309/staff?useUnicode=true&characterEncoding=UTF-8&socketTimeout=60000
+    userName: imcdev
+    password: migu123456
   redis:
     host: 127.0.0.1
     port: 6379

@@ -1,5 +1,6 @@
 package com.staff.server.controller.pri;
 
+import com.netflix.ribbon.proxy.annotation.Http;
 import com.staff.common.config.BusinessException;
 import com.staff.common.config.CookieUtil;
 import com.staff.common.config.ErrorCode;
@@ -202,6 +203,29 @@ public class PrivateServerController {
     }
 
     /**
+     * 获取员工工资
+     * @return
+     */
+    @RequestMapping(value = "/getNormalSalaryList", consumes = {"application/json"},
+            produces = {"application/json"}, method = RequestMethod.POST)
+    public GetSalaryListResponse getNormalSalaryList(@RequestBody GetSalaryListRequest request,
+                                                     HttpServletRequest httpServletRequest) {
+        String scount = CookieUtil.getCookieByName(httpServletRequest, "count");
+        Integer count = salaryTableMapper.selectSalryCount(scount,request.getYear(),request.getMonth());
+        GetSalaryListResponse response = new GetSalaryListResponse();
+        if (count == 0) {
+            response.setPageTotal(1);
+            return response;
+        } else {
+            response.setPageTotal((int)Math.ceil(Double.valueOf(count) / 10));
+        }
+        List<SalaryTable> salaryTableList = salaryTableMapper.selectSalaryByPageNo(scount,request.getYear(),request.getMonth(),
+                (request.getPageNo() -1) * 10);
+        response.setSalaryTableList(salaryTableList);
+        return response;
+    }
+
+    /**
      * 录入工资
      * @return
      */
@@ -270,7 +294,7 @@ public class PrivateServerController {
      * @return
      */
     private boolean matchNum(String str) {
-      return Pattern.matches("^[1-9][1-9]*|0$",str);
+      return Pattern.matches("^[1-9]{1}[0-9]*|0$", str);
     }
 
     /**

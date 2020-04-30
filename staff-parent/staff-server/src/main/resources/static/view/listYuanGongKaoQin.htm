@@ -27,14 +27,14 @@
               return;
           }
           pageNum++;
-          search(count,year,month, pageNum);
+          search(status,date,staffCount, pageNum);
       }
       function before() {
           if (pageNum == 1) {
               return;
           }
           pageNum--;
-          search(count,year,month, pageNum);
+          search(status,date,staffCount, pageNum);
       }
       function searchForParam() {
           pageNum = 1;

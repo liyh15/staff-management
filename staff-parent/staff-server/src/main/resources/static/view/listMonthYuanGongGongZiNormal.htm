@@ -17,68 +17,65 @@
       var pageTotal = 1;
       // 当前页数
       var pageNum = 1;
-      var status = "";
-      var date="";
-      var staffCount="";
-
-
+      var count = "";
+      var year="";
+      var month="";
       function next() {
           if (pageNum == pageTotal) {
               return;
           }
           pageNum++;
-          search(status,date,staffCount, pageNum);
+          search(count,year,month, pageNum);
       }
       function before() {
           if (pageNum == 1) {
               return;
           }
           pageNum--;
-          search(status,date,staffCount, pageNum);
+          search(count,year,month, pageNum);
       }
       function searchForParam() {
           pageNum = 1;
-          status = $("#status").val();
-          date = $("#date").val();
-          staffCount = $("#staffCount").val();
-          search(status,date,staffCount, pageNum);
+          year = $("#year").val();
+          month = $("#month").val();
+          search(count,year,month, pageNum);
       }
-      function search(status,date,staffCount, pageNo) {
+      function search(count,year,month, pageNo) {
           // 页面初始化
           var xhr = new XMLHttpRequest();
-          xhr.open("post", "/private/system/getAttendance", true);
+          xhr.open("post", "/private/system/getNormalSalaryList", true);
           xhr.onreadystatechange = function() {
               if (xhr.readyState==4 && xhr.status==200) {
                   // 判断异常
                   var obj = JSON.parse(xhr.responseText);
                   if (obj["code"] != "200") {
                       alert(obj["message"]);
-                      if (obj["code"] == "402") {
-                          window.location.href = "http://localhost:8083/public/view/loginView";
-                      }
                   } else {
                       var data = obj["data"];
                       pageTotal = data["pageTotal"];
-                      var attendanceTableList = data["attendanceTableList"];
+                      var salaryTableList = data["salaryTableList"];
                       $("#pageTotal").text(pageTotal);
                       $("#pageNo").text(pageNo);
                       $("tr").remove(".sonTr");
-                      for (var i = 0; i < attendanceTableList.length; i++) {
+                      for (var i = 0; i < salaryTableList.length; i++) {
                           $("#salaryTable").append("<tr class=\"sonTr\">\n" +
-                              "\t\t\t\t    <td bgcolor=\"#FFFFFF\"><div align=\"center\">"+attendanceTableList[i].staffCount+"</div></td>\n" +
-                              "                    <td height=\"20\" bgcolor=\"#FFFFFF\"><div align=\"center\">"+attendanceTableList[i].staffName+"</div></td>\n" +
-                              "                    <td bgcolor=\"#FFFFFF\"><div align=\"center\">"+attendanceTableList[i].attendanceTime+"</div></td>\n" +
-                              "                    <td bgcolor=\"#FFFFFF\"><div align=\"center\">"+attendanceTableList[i].attendanceStatus+"</div></td>\n" +
-                              "                    <td bgcolor=\"#FFFFFF\"><div align=\"center\">"+attendanceTableList[i].commont+"</div></td>\n");
+                              "\t\t\t\t    <td bgcolor=\"#FFFFFF\"><div align=\"center\">"+salaryTableList[i].staffCount+"</div></td>\n" +
+                              "                    <td height=\"20\" bgcolor=\"#FFFFFF\"><div align=\"center\">"+salaryTableList[i].staffName+"</div></td>\n" +
+                              "                    <td bgcolor=\"#FFFFFF\"><div align=\"center\">"+salaryTableList[i].year+"</div></td>\n" +
+                              "                    <td bgcolor=\"#FFFFFF\"><div align=\"center\">"+salaryTableList[i].month+"</div></td>\n" +
+                              "                    <td bgcolor=\"#FFFFFF\"><div align=\"center\">"+salaryTableList[i].salaryNum+"</div></td>\n" +
+                              "                    <td bgcolor=\"#FFFFFF\"><div align=\"center\">"+salaryTableList[i].commont+"</div></td>\n" +
+                              "                    <td bgcolor=\"#FFFFFF\"><div align=\"center\">"+salaryTableList[i].type+"</div></td>\n" +
+                              "                  </tr>");
                       }
                   }
               }
           }
           var req = {};
+          req["staffCount"] = count;
+          req["year"] = year;
+          req["month"] = month;
           req["pageNo"] = pageNo;
-          req["date"] = date;
-          req["status"] = status;
-          req["staffCount"] = staffCount;
           xhr.setRequestHeader("Content-type","application/json;charset=UTF-8");
           xhr.send(JSON.stringify(req));
       }
@@ -113,15 +110,26 @@
         <td height="62" background="../images/nav04.gif"><table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
           <tr>
             <td width="24"><img src="../images/ico07.gif" width="20" height="18" /></td>
-            <td width="519">日期:
-                <input id = "date" type="date"/>
-              类型:<select id = "status">
-                    <option></option>
-                    <option>未签到</option>
-                    <option>已签到</option>
-                    <option>请假</option>
+            <td width="519">年份:
+                <select name="select2" id = "year">
                 </select>
-              员工编号:<input name="staffCount" type="text" class="right-button02" id = "staffCount"/>
+              &nbsp;&nbsp;
+              月份:
+              <select name="month" id = "month">
+                        <option ></option>
+                        <option >1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                        <option>11</option>
+                        <option>12</option>
+                      </select>
               &nbsp;&nbsp;
                       <input name="Submit" type="button" class="right-button02" value="查 询" onclick="searchForParam()" /></td>
           </tr>
@@ -135,16 +143,18 @@
           <td><table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
 	
 					                  <tr>
-                    <td height="20" colspan="9" align="center" bgcolor="#EEEEEE"class="tablestyle_title"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 员工考勤列表 &nbsp;</td>
+                    <td height="20" colspan="9" align="center" bgcolor="#EEEEEE"class="tablestyle_title"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 员工月工资列表 &nbsp;</td>
                     </tr>
               <tr>
                 <td height="40" class="font42"><table id = "salaryTable" width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#464646" class="newfont03">
                   <tr>
-				    <td width="20%" align="center" bgcolor="#EEEEEE">员工编号</td>
-                    <td width="20%" height="20" align="center" bgcolor="#EEEEEE">员工姓名</td>
-                    <td width="20%" align="center" bgcolor="#EEEEEE">日期</td>
-                    <td width="20%" align="center" bgcolor="#EEEEEE">签到情况</td>
-                    <td width="20%" align="center" bgcolor="#EEEEEE">说明</td>
+				    <td width="14%" align="center" bgcolor="#EEEEEE">员工编号</td>
+                    <td width="14%" height="20" align="center" bgcolor="#EEEEEE">员工姓名</td>
+                    <td width="14%" align="center" bgcolor="#EEEEEE">年份</td>
+                    <td width="14%" align="center" bgcolor="#EEEEEE">月份</td>
+                    <td width="14%" align="center" bgcolor="#EEEEEE">总工资</td>
+                    <td width="16%" align="center" bgcolor="#EEEEEE">备注</td>
+                    <td width="14%" align="center" bgcolor="#EEEEEE">发放方式</td>
                   </tr>
                 </table></td>
               </tr>
